@@ -11,7 +11,8 @@ import {
   updateDoc,
   deleteDoc,
   serverTimestamp,
-  increment 
+  increment, 
+  setDoc
 } from "firebase/firestore";
 import "./VotePage.css";
 
@@ -35,21 +36,21 @@ const VotePage = () => {
         AUTO-FILL DETAILS
   ---------------------------------------------- */
 
-   useEffect(() => {
-    const incrementVisitors = async () => {
-      const ref = doc(db, "analytics", "visitorCount");
+ useEffect(() => {
+  const updateVisitors = async () => {
+    const ref = doc(db, "analytics", "visitorCount");
 
-      try {
-        await updateDoc(ref, {
-          count: increment(1),
-        });
-      } catch (err) {
-        console.log("Error updating visitor count:", err);
-      }
-    };
+    try {
+      await updateDoc(ref, { count: increment(1) });
+    } catch (error) {
+      // Document missing → create it
+      await setDoc(ref, { count: 1 });
+    }
+  };
 
-    incrementVisitors();
-  }, []);
+  updateVisitors();
+}, []);
+
 
   useEffect(() => {
     const savedName = localStorage.getItem("farmerName");
