@@ -11,6 +11,7 @@ import {
   updateDoc,
   deleteDoc,
   serverTimestamp,
+  increment 
 } from "firebase/firestore";
 import "./VotePage.css";
 
@@ -33,6 +34,23 @@ const VotePage = () => {
   /* ---------------------------------------------
         AUTO-FILL DETAILS
   ---------------------------------------------- */
+
+   useEffect(() => {
+    const incrementVisitors = async () => {
+      const ref = doc(db, "analytics", "visitorCount");
+
+      try {
+        await updateDoc(ref, {
+          count: increment(1),
+        });
+      } catch (err) {
+        console.log("Error updating visitor count:", err);
+      }
+    };
+
+    incrementVisitors();
+  }, []);
+
   useEffect(() => {
     const savedName = localStorage.getItem("farmerName");
     const savedMobile = localStorage.getItem("farmerMobile");
