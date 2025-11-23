@@ -75,29 +75,39 @@ const AdminPanel = () => {
   };
 
   // 🔥 SAVE EDITED SURVEY
-  const saveEdit = async () => {
-    const trimmed = options.map((o) => o.trim()).filter(Boolean);
+const saveEdit = async () => {
+  const trimmed = options.map((o) => o.trim()).filter(Boolean);
 
-    if (!question.trim() || trimmed.length < 2)
-      return alert("Enter question + at least 2 options");
+  if (!question.trim() || trimmed.length < 2)
+    return alert("Enter question + at least 2 options");
 
-    const updateData = {
-      question: question.trim(),
-      options: trimmed.map((text, i) => ({
-        id: `opt_${editingSurvey}_${i}`,
-        text,
-        votes: 0, // ⚠ votes removed because options changed
-      })),
-    };
+  // Existing survey data
+  const oldSurvey = surveys.find((s) => s.id === editingSurvey);
 
-    await updateDoc(doc(db, "surveys", editingSurvey), updateData);
+  // Map old votes with old optionId
+  const oldMap = {};
+  oldSurvey.options.forEach((o) => {
+    oldMap[o.text.trim()] = o.votes || 0;
+  });
 
-    alert("✏️ Survey updated successfully!");
+  // New options with preserved votes (if same text)
+  const updatedOptions = trimmed.map((text, i) => ({
+    id: oldSurvey.options[i]?.id || `opt_${editingSurvey}_${i}`, // keep same id if exists
+    text,
+    votes: oldMap[text] ?? oldSurvey.options[i]?.votes ?? 0,
+  }));
 
-    setEditingSurvey(null);
-    setQuestion("");
-    setOptions(["", ""]);
-  };
+  await updateDoc(doc(db, "surveys", editingSurvey), {
+    question: question.trim(),
+    options: updatedOptions,
+  });
+
+  alert("✏️ Survey updated successfully!");
+
+  setEditingSurvey(null);
+  setQuestion("");
+  setOptions(["", ""]);
+};
 
   // CLOSE survey
   const closeSurvey = async (id) => {

@@ -34,7 +34,8 @@ const ResultsPage = () => {
         snap.forEach((d) => data.push({ id: d.id, ...d.data() }));
         data.sort(
           (a, b) =>
-            (a.createdAt?.toDate?.() || 0) < (b.createdAt?.toDate?.() || 0)
+            (a.createdAt?.toDate?.() || 0) <
+            (b.createdAt?.toDate?.() || 0)
               ? 1
               : -1
         );
@@ -215,14 +216,16 @@ const ResultsPage = () => {
                   <table className="analytics-table">
                     <thead>
                       <tr>
+                        <th>SR No</th>
                         <th>Farmer Name</th>
                         <th>Mobile Number</th>
                         <th>Voted At</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {rows.map((r) => (
+                      {rows.map((r, index) => (
                         <tr key={r.id}>
+                          <td>{index + 1}</td>
                           <td>{r.farmerName || r.name || "—"}</td>
                           <td>{r.mobile}</td>
                           <td>
