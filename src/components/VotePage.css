@@ -1,0 +1,266 @@
+/* MAIN CONTAINER */
+.vote-container {
+  max-width: 850px;
+  margin: 30px auto;
+  padding: 25px;
+  background: #fcfff5;
+  border-radius: 18px;
+  box-shadow: 0 5px 25px rgba(0, 100, 0, 0.12);
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+}
+
+.vote-container h2 {
+  color: #1b5e20;
+  font-size: 28px;
+  margin-bottom: 25px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 3px rgba(0, 100, 0, 0.2);
+}
+
+/* SURVEY LIST */
+.survey-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.survey-card {
+  background: #ffffff;
+  padding: 18px 20px;
+  border-radius: 16px;
+  border-left: 6px solid #4caf50;
+  box-shadow: 0 3px 10px rgba(0, 100, 0, 0.08);
+  transition: 0.3s;
+}
+
+.survey-card:hover {
+  transform: scale(1.03);
+  background: #f3fff4;
+}
+
+.survey-card h4 {
+  color: #1b5e20;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* ACTION ROW */
+.survey-bottom-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.vote-now-btn {
+  background: linear-gradient(135deg, #43a047, #2e7d32);
+  color: white;
+  padding: 12px 22px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  transition: 0.3s;
+}
+
+.vote-now-btn:hover {
+  transform: scale(1.05);
+  background: #1b5e20;
+}
+
+.closed {
+  color: #b71c1c;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* VOTE FORM */
+.vote-form {
+  background: #ffffff;
+  padding: 26px;
+  border-radius: 18px;
+  box-shadow: 0 5px 15px rgba(0, 100, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.vote-form h3 {
+  color: #2e7d32;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.vote-form input {
+  padding: 14px;
+  border: 2px solid #c8e6c9;
+  border-radius: 10px;
+  outline: none;
+  font-size: 17px;
+  background: #fafffa;
+  transition: 0.2s;
+}
+
+.vote-form input:focus {
+  border-color: #43a047;
+  box-shadow: 0 0 8px rgba(67, 160, 71, 0.4);
+}
+
+/* OPTIONS (Radio Buttons) */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.options label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #f0fff0;
+  padding: 12px;
+  border: 2px solid #dcedc8;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.options label:hover {
+  background: #e2f7e2;
+  transform: scale(1.02);
+}
+
+/* BUTTONS */
+.btn-row {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 15px;
+}
+
+.submit-btn {
+  background: #2e7d32;
+  color: white;
+  padding: 13px 25px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.submit-btn:hover {
+  background: #1b5e20;
+}
+
+.cancel-btn {
+  background: #f3f3f3;
+  color: #333;
+  padding: 13px 25px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.cancel-btn:hover {
+  background: #e0e0e0;
+}
+
+/* VOTER COUNT BOX */
+.total-votes-box {
+  background: #e8f5e9;
+  padding: 12px;
+  border-left: 5px solid #2e7d32;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1b5e20;
+}
+
+/* SEARCH BOX */
+.search-box {
+  margin-top: 22px;
+  margin-bottom: 12px;
+}
+
+.search-box input {
+  width: 95%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 2px solid #b2d8b6;
+  background: #fbfffb;
+  font-size: 17px;
+  transition: 0.2s;
+}
+
+.search-box input:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+}
+
+/* VOTER LIST TABLE */
+.voter-list-box {
+  margin-top: 25px;
+  background: #ffffff;
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0px 3px 10px rgba(0,0,0,0.09);
+}
+
+.voter-list-box h3 {
+  font-size: 20px;
+  color: #2e7d32;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.voter-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.voter-table th,
+.voter-table td {
+  border: 1px solid #e5e5e5;
+  padding: 10px;
+  font-size: 15px;
+}
+
+.voter-table th {
+  background: #f1f8e9;
+  color: #2e7d32;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* MOBILE VIEW */
+@media (max-width: 600px) {
+  .vote-container {
+    padding: 12px;
+  }
+
+  .vote-form {
+    padding: 18px;
+  }
+
+  .btn-row {
+    flex-direction: column;
+  }
+
+  .submit-btn,
+  .cancel-btn {
+    width: 100%;
+  }
+
+  .survey-card {
+    padding: 15px;
+  }
+}
