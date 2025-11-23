@@ -8,8 +8,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<AdminPanel />} />
-        <Route path="/vote" element={<VotePage />} />
+        <Route path="/" element={<VotePage />} />
+        <Route path="/vote" element={<AdminPanel />} />
         <Route path="/results/:id" element={<ResultsPage />} />
       </Routes>
     </Router>
