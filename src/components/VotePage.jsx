@@ -11,7 +11,7 @@ import {
   updateDoc,
   deleteDoc,
   serverTimestamp,
-  increment, 
+  increment,
   setDoc
 } from "firebase/firestore";
 import "./VotePage.css";
@@ -32,26 +32,29 @@ const VotePage = () => {
   const [editMobile, setEditMobile] = useState("");
   const [editOption, setEditOption] = useState("");
 
+  // 🔥 NEW LOADER STATE
+  const [loadingSurveys, setLoadingSurveys] = useState(true);
+
+  /* ---------------------------------------------
+        VISITOR COUNTER
+  ---------------------------------------------- */
+  useEffect(() => {
+    const updateVisitors = async () => {
+      const ref = doc(db, "analytics", "visitorCount");
+
+      try {
+        await updateDoc(ref, { count: increment(1) });
+      } catch (error) {
+        await setDoc(ref, { count: 1 });
+      }
+    };
+
+    updateVisitors();
+  }, []);
+
   /* ---------------------------------------------
         AUTO-FILL DETAILS
   ---------------------------------------------- */
-
- useEffect(() => {
-  const updateVisitors = async () => {
-    const ref = doc(db, "analytics", "visitorCount");
-
-    try {
-      await updateDoc(ref, { count: increment(1) });
-    } catch (error) {
-      // Document missing → create it
-      await setDoc(ref, { count: 1 });
-    }
-  };
-
-  updateVisitors();
-}, []);
-
-
   useEffect(() => {
     const savedName = localStorage.getItem("farmerName");
     const savedMobile = localStorage.getItem("farmerMobile");
@@ -61,9 +64,11 @@ const VotePage = () => {
   }, []);
 
   /* ---------------------------------------------
-        LOAD SURVEYS
+        LOAD SURVEYS + SHOW LOADER
   ---------------------------------------------- */
   useEffect(() => {
+    setLoadingSurveys(true);
+
     const unsub = onSnapshot(collection(db, "surveys"), (snap) => {
       const list = [];
       snap.forEach((d) => list.push({ id: d.id, ...d.data() }));
@@ -73,6 +78,7 @@ const VotePage = () => {
       );
 
       setSurveys(list);
+      setLoadingSurveys(false); // stop loader
     });
 
     return () => unsub();
@@ -249,10 +255,51 @@ const VotePage = () => {
 
   return (
     <div className="vote-container">
+      {/* Loader Animation CSS */}
+      <style>
+        {`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        `}
+      </style>
+
       <h2>🌾 खेतीसाथी - एक गाव एक मजुरी-लाखोरी </h2>
 
+      {/* 🔥 LOADER WHILE SURVEYS LOAD */}
+      {loadingSurveys && (
+       <div
+  style={{
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    padding: "30px 0",
+    gap: "10px",
+  }}
+>
+  <div
+    style={{
+      width: "55px",
+      height: "55px",
+      borderRadius: "50%",
+      border: "6px solid #4caf50",
+      borderTopColor: "transparent",
+      animation: "spin 0.7s linear infinite",
+    }}
+  ></div>
+
+  <span style={{ fontSize: "16px", color: "#333", fontWeight: "600" }}>
+    सर्वेक्षण लोड करत आहे...
+  </span>
+</div>
+
+        
+      )}
+
       {/* SURVEY LIST */}
-      {!selected ? (
+      {!selected && !loadingSurveys ? (
         <div className="survey-list">
           {surveys.map((s) => {
             const total = s.options.reduce(
@@ -279,9 +326,13 @@ const VotePage = () => {
             );
           })}
         </div>
-      ) : (
+      ) : null}
+
+      {/* REST OF YOUR CODE REMAINS SAME */}
+
+      {selected && (
         <>
-          {/* VOTING FORM */}
+          {/* Voting Form */}
           <form className="vote-form" onSubmit={submitVote}>
             <h3>{selected.question}</h3>
             <p className="total-votes-box">
@@ -327,7 +378,6 @@ const VotePage = () => {
             </div>
           </form>
 
-          {/* SEARCH BAR */}
           <div className="search-box">
             <input
               placeholder="🔍 नाव किंवा मोबाइलने शोधा..."
@@ -336,7 +386,6 @@ const VotePage = () => {
             />
           </div>
 
-          {/* VOTER LIST */}
           <div className="voter-list-box">
             <h3>🧑‍🌾 मतदान करणारे</h3>
 
@@ -346,9 +395,6 @@ const VotePage = () => {
                   <th>क्र.</th>
                   <th>नाव</th>
                   <th>मोबाइल</th>
-                  {/* <th>पर्याय</th>
-                  <th>संपादित</th>
-                  <th>डिलिट</th> */}
                 </tr>
               </thead>
 
@@ -356,82 +402,8 @@ const VotePage = () => {
                 {filteredVoters.map((v, i) => (
                   <tr key={v.id}>
                     <td>{i + 1}</td>
-
-                    {editId === v.id ? (
-                      <>
-                        <td>
-                          <input
-                            value={editName}
-                            onChange={(e) => setEditName(e.target.value)}
-                          />
-                        </td>
-
-                        <td>
-                          <input
-                            value={editMobile}
-                            maxLength={10}
-                            onChange={(e) =>
-                              setEditMobile(e.target.value.replace(/\D/g, ""))
-                            }
-                          />
-                        </td>
-
-                        <td>
-                          {selected.options.map((opt) => (
-                            <label key={opt.id} style={{ display: "block" }}>
-                              <input
-                                type="radio"
-                                checked={editOption === opt.id}
-                                onChange={() => setEditOption(opt.id)}
-                              />
-                              {opt.text}
-                            </label>
-                          ))}
-                        </td>
-
-                        <td>
-                          <button className="submit-btn" onClick={() => saveEdit(v)}>
-                            जतन करा
-                          </button>
-                          <button
-                            className="cancel-btn"
-                            onClick={() => setEditId(null)}
-                          >
-                            रद्द करा
-                          </button>
-                        </td>
-
-                        <td>—</td>
-                      </>
-                    ) : (
-                      <>
-                        <td>{v.farmerName}</td>
-                        <td>{v.mobile}</td>
-
-                        {/* <td>
-                          {
-                            selected.options.find(
-                              (o) => o.id === v.selectedOptionId
-                            )?.text
-                          }
-                        </td>
-
-                        <td>
-                          <button className="edit-btn" onClick={() => startEdit(v)}>
-                            ✏ संपादित करा
-                          </button>
-                        </td>
-
-                        <td>
-                          <button
-                            className="delete-btn"
-                            onClick={() => deleteVote(v)}
-                          >
-                            🗑 काढून टाका
-                          </button>
-                        </td> */}
-                      </>
-                    )}
+                    <td>{v.farmerName}</td>
+                    <td>{v.mobile}</td>
                   </tr>
                 ))}
               </tbody>
